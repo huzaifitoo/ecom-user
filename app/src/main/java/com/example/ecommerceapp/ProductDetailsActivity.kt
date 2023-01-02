@@ -4,13 +4,22 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.Slide
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
+import com.example.ecommerceapp.RoomDB.AppDatabase
+import com.example.ecommerceapp.RoomDB.ProductDao
+import com.example.ecommerceapp.RoomDB.ProductModel
 import com.example.ecommerceapp.databinding.ActivityProductDetailsBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.checkerframework.checker.units.qual.A
+import java.util.jar.Attributes.Name
 
 class ProductDetailsActivity : AppCompatActivity() {
 
@@ -26,7 +35,6 @@ class ProductDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
     }
 
     private fun getProductDetails(proId: String?) {
@@ -34,20 +42,73 @@ class ProductDetailsActivity : AppCompatActivity() {
         Firebase.firestore.collection("products")
             .document(proId!!).get().addOnSuccessListener {
                 val list = it.get("productImages") as ArrayList<String>
-                binding.textView7.text=it.getString("productName")
-                binding.textView8.text=it.getString("productSp")
-                binding.textView9.text=it.getString("productDescription")
+                val name = it.getString("productName")
+                val productSp = it.getString("productSp")
+                val productDesc = it.getString("productDescription")
+
+
+                binding.textView7.text = it.getString("productName")
+                binding.textView8.text = it.getString("productSp")
+                binding.textView9.text = it.getString("productDescription")
 
                 val slideList = arrayListOf<SlideModel>()
-                for (data in list){
-                    slideList.add(SlideModel(data,ScaleTypes.CENTER_CROP))
+                for (data in list) {
+                    slideList.add(SlideModel(data, ScaleTypes.CENTER_CROP))
                 }
+
+                cartAction(proId, name, productSp, it.getString("productCoverImg"))
+
                 binding.imageSlider.setImageList(slideList)
 
             }
             .addOnFailureListener {
-
-                Toast.makeText(this,"something went wrong",Toast.LENGTH_SHORT)
+                Toast.makeText(this, "something went wrong", Toast.LENGTH_SHORT)
             }
+    }
+
+    private fun cartAction(proId: String, name: String?, productSp: String?, coverImg: String?) {
+
+        val productDao = AppDatabase.getInstance(this).productDao()
+
+        if (productDao.isExit(proId) != null) {
+            binding.textView10.text = "Go to Cart"
+        } else {
+            binding.textView10.text = " Add to Cart"
+        }
+
+        binding.textView10.setOnClickListener {
+            if (productDao.isExit(proId) != null) {
+                binding.textView10.text = "Go to Cart"
+                openCart()
+            } else {
+                addToCart(productDao, proId, name, productSp, coverImg)
+            }
+        }
+    }
+
+    private fun addToCart(
+        productDao: ProductDao,
+        proId: String,
+        name: String?,
+        productSp: String?,
+        coverImg: String?
+    ) {
+        val data = ProductModel(proId, name, coverImg, productSp)
+        lifecycleScope.launch(Dispatchers.IO) {
+            productDao.insertProduct(data)
+            binding.textView10.text = "Go to Cart"
+
+        }
+
+    }
+
+    private fun openCart() {
+        val preferences = this.getSharedPreferences("info", MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor.putBoolean("isCart", true)
+        editor.apply()
+
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }
