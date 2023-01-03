@@ -28,6 +28,8 @@ class HomeFragment : Fragment() {
 
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
+
+
         val preferences =
             requireContext().getSharedPreferences("info", AppCompatActivity.MODE_PRIVATE)
         if (preferences.getBoolean("isCart", false))
@@ -46,33 +48,33 @@ class HomeFragment : Fragment() {
     private fun getSliderImage() {
         Firebase.firestore.collection("slider").document("item").get().addOnSuccessListener {
 
-                Glide.with(requireContext()).load(it.get("img")).into(binding.sliderimage)
-            }
+            Glide.with(requireContext()).load(it.get("img")).into(binding.sliderimage)
+        }
     }
 
     private fun getCategory() {
         val list = ArrayList<CategoryModal>()
         Firebase.firestore.collection("categories").get().addOnSuccessListener {
-                list.clear()
-                for (doc in it.documents) {
-                    val data = doc.toObject(CategoryModal::class.java)
-                    list.add(data!!)
-                }
-                binding.rcCategory.adapter = CategoryAdapter(requireContext(), list)
+            list.clear()
+            for (doc in it.documents) {
+                val data = doc.toObject(CategoryModal::class.java)
+                list.add(data!!)
             }
+            binding.rcCategory.adapter = CategoryAdapter(requireContext(), list)
+        }
     }
 
 
     private fun getProducts() {
         val list = ArrayList<AddProductModal>()
         Firebase.firestore.collection("products").get().addOnSuccessListener {
-                list.clear()
-                for (doc in it.documents) {
-                    val data = doc.toObject(AddProductModal::class.java)
-                    list.add(data!!)
-                }
-                binding.rcProducts.adapter = ProductAdapter(requireContext(), list)
+            list.clear()
+            for (doc in it.documents) {
+                val data = doc.toObject(AddProductModal::class.java)
+                list.add(data!!)
             }
+            binding.rcProducts.adapter = ProductAdapter(requireContext(), list)
+        }
 
 
     }

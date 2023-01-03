@@ -27,12 +27,12 @@ class CategoryAdapter(var context: Context, var list: ArrayList<CategoryModal>) 
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        holder.binding.textview2.text = list[position].cat
+        holder.binding.textview2.text = list[position].cate
         Glide.with(context).load(list[position].img).into(holder.binding.imageview)
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, CategoryActivity::class.java)
-            intent.putExtra("cat", list[position].cat)
+            intent.putExtra("cat", list[position].cate)
             context.startActivity(intent)
         }
 

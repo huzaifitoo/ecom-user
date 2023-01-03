@@ -10,6 +10,7 @@ import com.example.ecommerceapp.Fragment.Modal.AddProductModal
 import com.example.ecommerceapp.ProductDetailsActivity
 import com.example.ecommerceapp.databinding.LayoutProductItemBinding
 
+
 class ProductAdapter(val context: Context, val list : ArrayList<AddProductModal>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
    inner class ProductViewHolder (var binding: LayoutProductItemBinding) : RecyclerView.ViewHolder(binding.root) {

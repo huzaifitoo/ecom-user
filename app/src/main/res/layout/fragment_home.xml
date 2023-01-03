@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#CABCBC"
     android:orientation="vertical"
-    android:padding="24dp"
+    android:padding="15dp"
     tools:context=".Fragment.HomeFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -18,10 +18,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="190dp"
-                app:cardCornerRadius="20dp">
+                app:cardCornerRadius="12dp">
 
                 <ImageView
                     android:id="@+id/sliderimage"
@@ -41,6 +42,7 @@
                     android:id="@+id/tv_shopcat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
                     android:text="Shop by Category"
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -96,12 +98,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_products"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="true"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/layout_product_item" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </LinearLayout>

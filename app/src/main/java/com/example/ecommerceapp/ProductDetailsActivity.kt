@@ -73,7 +73,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         if (productDao.isExit(proId) != null) {
             binding.textView10.text = "Go to Cart"
         } else {
-            binding.textView10.text = " Add to Cart"
+            binding.textView10.text = "Add to Cart"
         }
 
         binding.textView10.setOnClickListener {
